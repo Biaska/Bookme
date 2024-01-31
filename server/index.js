@@ -9,3 +9,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Bookme server listening on port ${port}`)
 })
+
+module.exports = app; // Export the Express app
