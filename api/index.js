@@ -6,8 +6,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Bookme server listening on port ${port}`)
 })
 
-module.exports = app; // Export the Express app
+
+
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
