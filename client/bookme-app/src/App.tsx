@@ -1,16 +1,11 @@
 import './App.css'
-import Navbar from './Navbar'
+import Layout from './Layout'
 
-function App() {
+const App: React.FC = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="card">
-        <div>
-          <p>Hello World.</p>
-        </div>
-      </div>
+      <Layout/>
     </>
   )
 }
