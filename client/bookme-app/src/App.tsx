@@ -1,13 +1,15 @@
-import './App.css'
-import Layout from './Layout'
 
-const App: React.FC = () => {
+import Providors from "./Providors"
+import Router from "./Router"
+
+export default function App() {
 
   return (
     <>
-      <Layout/>
+      <Providors>
+        <Router />
+      </Providors>
     </>
   )
 }
 
-export default App
