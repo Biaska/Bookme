@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useApi, TApiResponse } from "../hooks/useApi";
+import { useAPI } from "../hooks/useApi";
 
 const LogoutButton = () => {
   const { logout } = useAuth0();
@@ -13,12 +13,16 @@ const LogoutButton = () => {
 
 
 export default function Dashboard() {
+  const callAPI = useAPI()
 
-  const data: TApiResponse = useApi.get('/');
+    const resetDatabase = async () => {
+      await callAPI.get('/');
+      console.log(callAPI.data)
+    }
 
-    console.log(data)
     return(
         <>
+            <button onClick={()=>resetDatabase()}>Load/Reset Database</button>
             <LogoutButton />
             <h1>Dashboard</h1>
         </>
