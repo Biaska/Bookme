@@ -48,6 +48,12 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
 
 });
 
+app.post('/businesses/:id', validateAccessToken, async (req, res) => {
+  console.log("GET ONE BUSINESS");
+  let con = new Connection()
+  con = new Connection()
+});
+
 app.get('/reset', validateAccessToken, async (req, res) => {
   console.log("RESET DATABASE")
   let con = new Connection()

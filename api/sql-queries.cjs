@@ -108,6 +108,12 @@ const queries = {
             (1, 'Stella Starlight', 'stella.starlight@example.com', 'Confirmed', '2024-03-05 11:30:00', 'UTC'),
             (2, 'Orion Nebula', 'orion.nebula@example.com', 'Pending', '2024-03-10 14:15:00', 'GMT'),
             (3, 'Andromeda Galaxy', 'andromeda.galaxy@example.com', 'Confirmed', '2024-03-15 10:45:00', 'UTC');`,
+    },
+    select: {
+        businesses: {
+            all: "SELECT * from Businesses;",
+            one: "SELECT * FROM Businesses WHERE id = $1"
+        }
     }
 }
 

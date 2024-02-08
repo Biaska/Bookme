@@ -17,6 +17,7 @@ export interface API {
 
 export interface APIMethods {
   get: () => Promise<void>;
+  getOne: (id: string) => Promise<void>;
   post: (body: any) => Promise<void>;
   put: (body: any) => Promise<void>;
 }
@@ -40,11 +41,18 @@ export function useAPI() {
   // import token call
   const { getAccessTokenSilently } = useAuth0();
 
-    const get = async (url: string): Promise<void> => {
+  const get = async (url: string): Promise<void> => {
     const options: ApiOptions = {
       method: "GET",
     }
     return await apiCall(url, options);
+  };
+
+  const getOne = async (url: string, id:string): Promise<void> => {
+    const options: ApiOptions = {
+      method: "GET",
+    }
+    return await apiCall((url + `/${id}`), options);
   };
 
   const post = async (url: string, body: any): Promise<void> => {
@@ -95,6 +103,7 @@ export function useAPI() {
     const url = apiURI + entity 
     return {
       get: async () => { await get(url)},
+      getOne: async (id: string) => {await getOne(url, id)},
       post: async (body: any) => {await post(url, body)},
       put: async (body: any) => {await put(url, body)},
     } 
