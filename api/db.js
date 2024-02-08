@@ -1,5 +1,6 @@
 const { Client } = require('pg')
 const fs = require('fs');
+const queries = require('./sql-queries.cjs')
 
 class Connection {
 
@@ -15,9 +16,44 @@ class Connection {
     }
 
     async resetDatabase() {
-        const sql = fs.readFileSync("./bookme-definitions-postgre.sql", "utf8");
-        return this.query(sql)
-    }
+        await this.client.connect();
+
+        try {
+            let res = await this.client.query(queries.foreignChecks.off)
+            console.log(res)
+            res = await this.client.query(queries.drop)
+            console.log(res)
+            res = await this.client.query(queries.create.businesses)
+            console.log(res)
+            res = await this.client.query(queries.create.services)
+            console.log(res)
+            res = await this.client.query(queries.create.schedules)
+            console.log(res)
+            res = await this.client.query(queries.create.sessions)
+            console.log(res)
+            res = await this.client.query(queries.create.bookings)
+            console.log(res)
+            res = await this.client.query(queries.insert.businesses)
+            console.log(res)
+            res = await this.client.query(queries.insert.services)
+            console.log(res)
+            res = await this.client.query(queries.insert.schedules)
+            console.log(res)
+            res = await this.client.query(queries.insert.sessions)
+            console.log(res)
+            res = await this.client.query(queries.insert.bookings)
+            console.log(res)
+            res = await this.client.query(queries.foreignChecks.on)
+            console.log(res)
+            console.log("DATABASE RESET")
+        } catch(e) {
+            console.error(e);
+        } finally {
+            await this.client.end();
+        }
+
+        
+    } 
 
     async query(stringQuery, parameters) {
 

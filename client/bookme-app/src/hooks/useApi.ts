@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
+
 export type TApiResponse = {
   status: Number;
   statusText: String;
@@ -9,12 +10,25 @@ export type TApiResponse = {
   loading: Boolean;
 };
 
+export interface API {
+  reset?: () => void;
+  [key: string]: APIMethods | (() => void) | undefined;
+}
+
+export interface APIMethods {
+  get: () => Promise<void>;
+  post: (body: any) => Promise<void>;
+  put: (body: any) => Promise<void>;
+}
+
+
 interface ApiOptions {
   method: string,
   body?: any,
 }
 
-const apiURI = "http://localhost:6060"
+const apiURI = "http://localhost:6060/"
+const entityPaths = ['businesses', 'services', 'schedules', 'sessions', 'bookings']
 
 export function useAPI() {
   const [status, setStatus] = useState<Number>(0);
@@ -30,24 +44,24 @@ export function useAPI() {
     const options: ApiOptions = {
       method: "GET",
     }
-    return await apiCall(apiURI + url, options);
-  }
+    return await apiCall(url, options);
+  };
 
   const post = async (url: string, body: any): Promise<void> => {
     const options: ApiOptions = {
       method: "POST",
       body: body
     }
-    return await apiCall(apiURI + url, options);
-  } 
+    return await apiCall(url, options);
+  };
 
   const put = async (url: string, body: any): Promise<void> => {
     const options: ApiOptions = {
       method: "PUT",
       body: body
     }
-    return await apiCall(apiURI + url, options);
-  }
+    return await apiCall(url, options);
+  };
 
   const apiCall = async (url: string, options: ApiOptions): Promise<void> => {
     // response state variables
@@ -76,5 +90,25 @@ export function useAPI() {
       }
       setLoading(false);
   };
-  return { get, put, post, status, statusText, data, error, loading }
+
+  const makePaths = (entity: string): APIMethods => {
+    const url = apiURI + entity 
+    return {
+      get: async () => { await get(url)},
+      post: async (body: any) => {await post(url, body)},
+      put: async (body: any) => {await put(url, body)},
+    } 
+  }
+
+  let api: API = {
+    reset: () => {get(apiURI + "reset")}
+  }
+  for (let i=0; entityPaths.length>i; i++) {
+    const entityPath = entityPaths[i]; // Ensure entityPath is a valid key of API
+    api[entityPath] = makePaths(entityPaths[i]);
+  }
+
+  const response: TApiResponse = {status, statusText, data, error, loading}
+
+  return [api, response] as const
 }

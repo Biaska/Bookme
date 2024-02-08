@@ -1,6 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAPI } from "../hooks/useApi";
-import { useAuthUserData } from "../hooks/useAuthUserData";
+import { APIMethods, useAPI } from "../hooks/useApi";
 import { useEffect, useState } from "react";
 
 const LogoutButton = () => {
@@ -15,29 +14,38 @@ const LogoutButton = () => {
 
 
 export default function Dashboard() {
-  const [userData, setUserData] = useState<any>()
-  const [userDetails, setUserDetails] = useState<any>()
-  const { user, userMetaData } = useAuthUserData();
-  const callAPI = useAPI()
+  const [user, setUser] = useState<any>()
+  const [api, response] = useAPI()
 
-    const makeAPICall = async () => {
-      await callAPI.get('/');
-      console.log(callAPI.data)
+  const getBusinesses = async () => {
+    const businesses = api.businesses as APIMethods
+    if (businesses) {
+      await businesses.get()
     }
-  useEffect(() => {
-    setUserData(userMetaData);
-    setUserDetails(user);
+    if (response.data) {
+      console.log(response.data)
+    }
+  }
+  const resetDatabase = async () => {
+    if (api.reset){
+      api.reset()
+    }
+    
+  }
 
+  useEffect(() => {
+    
   }, [])
 
     return(
         <>
-            <button onClick={()=>makeAPICall()}>Make API call</button>
+            <button onClick={()=>getBusinesses()}>Make API call</button>
+            <button onClick={()=>resetDatabase()}>Reset Databse</button>
             <LogoutButton />
             <h1>Dashboard</h1>
-            {userData ? <p>UserMetaData loaded: {userData} {userDetails?.name}</p> :
+            {/* {userData ? <p>UserMetaData loaded: {userData} {userDetails?.name}</p> :
               <div>loading...</div>
-            }
+            } */}
         </>
     )
 }

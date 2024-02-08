@@ -5,15 +5,14 @@ import { useAuth0 } from '@auth0/auth0-react'
 export const useAuthUserData = () => {
     const [userMetaData, setUserMetadata] = useState(null)
     const { user, getAccessTokenSilently } = useAuth0();
-    console.log(user)
 
     useEffect(() => {
         const getUserMetadata = async () => {
           const domain = import.meta.env.VITE_AUTH0_DOMAIN;
-      
+
           try {
             const accessToken: string  = await getAccessTokenSilently();
-      
+            
             const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
       
             const metadataResponse = await fetch(userDetailsByIdUrl, {
