@@ -1,6 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { APIMethods, useAPI } from "../hooks/useApi";
 import { useEffect, useState } from "react";
+import { PageLoader } from "../components/page-loader";
+import { useNavigate } from "react-router-dom";
 
 const LogoutButton = () => {
   const { logout } = useAuth0();
@@ -14,8 +16,28 @@ const LogoutButton = () => {
 
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>()
-  const [api, response] = useAPI()
+  const [user, setUser] = useState<any>(null);
+  const [api, response] = useAPI();
+  const { getIdTokenClaims, user: authUser } = useAuth0();
+  const navigate = useNavigate();
+
+  const getUser = async () => {
+    if (api.businesses) {
+      const businesses = api.businesses as APIMethods
+      if (authUser?.sub) {
+        await businesses.getOne(authUser.sub);;
+      }
+    }
+  }
+
+  const redirectToAccountSetup = async () => {
+    if (response.status === 200) {
+      console.log("user loaded")
+    }
+    if (response.status === 204) {
+      navigate('/BusinessInit');
+    }
+  }
 
   const getBusinesses = async () => {
     const businesses = api.businesses as APIMethods
@@ -34,8 +56,16 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    
+    getUser();
   }, [])
+
+  useEffect(() => {
+    redirectToAccountSetup();
+  }, [response])
+    
+    if (response.status === 0) {
+      return <PageLoader />
+    }
 
     return(
         <>

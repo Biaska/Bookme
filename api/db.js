@@ -33,6 +33,22 @@ class Connection {
             console.log(res)
             res = await this.client.query(queries.create.bookings)
             console.log(res)
+            res = await this.client.query(queries.foreignChecks.on)
+            console.log(res)
+            console.log("DATABASE RESET")
+        } catch(e) {
+            console.error(e);
+        } finally {
+            await this.client.end();
+        }
+    } 
+
+    async insertSampleData() {
+        await this.client.connect();
+
+        try {
+            let res = await this.client.query(queries.foreignChecks.off)
+            console.log(res)
             res = await this.client.query(queries.insert.businesses)
             console.log(res)
             res = await this.client.query(queries.insert.services)
@@ -45,14 +61,12 @@ class Connection {
             console.log(res)
             res = await this.client.query(queries.foreignChecks.on)
             console.log(res)
-            console.log("DATABASE RESET")
+            console.log("Sample Data Inserted")
         } catch(e) {
             console.error(e);
         } finally {
             await this.client.end();
         }
-
-        
     } 
 
     async query(stringQuery, parameters) {

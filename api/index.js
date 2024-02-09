@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const { auth } = require("express-oauth2-jwt-bearer");
 const Connection = require('./db.js');
+const queries = require('./sql-queries.cjs')
 
 dotenv.config();
 
@@ -48,16 +49,24 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
 
 });
 
-app.post('/businesses/:id', validateAccessToken, async (req, res) => {
+app.get('/businesses/:id', validateAccessToken, async (req, res) => {
   console.log("GET ONE BUSINESS");
   let con = new Connection()
   con = new Connection()
+  let business = await con.query(queries.select.businesses.one, [req.params.id])
+  if (business.rowCount === 0) {
+    res.status(204).json("");
+  } else {
+    res.status(200).json(business.rows);
+  }
+
 });
 
 app.get('/reset', validateAccessToken, async (req, res) => {
   console.log("RESET DATABASE")
   let con = new Connection()
   await con.resetDatabase()
+  res.status(200).json("Database Reset")
 });
 
 

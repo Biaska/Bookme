@@ -11,8 +11,9 @@ DROP TABLE IF EXISTS Bookings;
 
 -- Create Businesses Table: Represents information about businesses using the application.
 CREATE TABLE Businesses (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    id VARCHAR(30) NOT NULL PRIMARY KEY,
+    last_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(15),
     street_address VARCHAR(255),
@@ -20,7 +21,6 @@ CREATE TABLE Businesses (
     state VARCHAR(255),
     postal_code VARCHAR(10),
     country VARCHAR(255),
-    website VARCHAR(255),
     timezone VARCHAR(50) DEFAULT 'UTC',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

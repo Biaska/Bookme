@@ -89,9 +89,10 @@ export function useAPI() {
 
       try {
         const apiResponse = await fetch(url, requestOptions);
-        const json = await apiResponse.json();
-        setStatus(apiResponse.status);
-        setStatusText(apiResponse.statusText);
+        const string = await apiResponse.text();
+        const json = string === "" ? {} : JSON.parse(string);
+        setStatus(prevStatus => apiResponse.status);
+        setStatusText(prevStatusText => apiResponse.statusText);
         setData(json);
       } catch (error) {
         setError(error);
