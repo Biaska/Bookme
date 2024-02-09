@@ -46,7 +46,10 @@ app.get('/businesses', validateAccessToken, async (req, res) => {
 });
 
 app.post('/businesses', validateAccessToken, async (req, res) => {
-
+  console.log("POST BUSINESS");
+  let con = new Connection();
+  con = new Connection();
+  
 });
 
 app.get('/businesses/:id', validateAccessToken, async (req, res) => {
@@ -59,7 +62,6 @@ app.get('/businesses/:id', validateAccessToken, async (req, res) => {
   } else {
     res.status(200).json(business.rows);
   }
-
 });
 
 app.get('/reset', validateAccessToken, async (req, res) => {

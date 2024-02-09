@@ -20,7 +20,6 @@ CREATE TABLE Businesses (
     city VARCHAR(255),
     state VARCHAR(255),
     postal_code VARCHAR(10),
-    country VARCHAR(255),
     timezone VARCHAR(50) DEFAULT 'UTC',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
