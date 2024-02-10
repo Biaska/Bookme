@@ -23,15 +23,7 @@ class Connection {
             console.log(res)
             res = await this.client.query(queries.drop)
             console.log(res)
-            res = await this.client.query(queries.create.businesses)
-            console.log(res)
-            res = await this.client.query(queries.create.services)
-            console.log(res)
-            res = await this.client.query(queries.create.schedules)
-            console.log(res)
-            res = await this.client.query(queries.create.sessions)
-            console.log(res)
-            res = await this.client.query(queries.create.bookings)
+            res = await this.client.query(queries.createDatabase)
             console.log(res)
             res = await this.client.query(queries.foreignChecks.on)
             console.log(res)
@@ -49,15 +41,7 @@ class Connection {
         try {
             let res = await this.client.query(queries.foreignChecks.off)
             console.log(res)
-            res = await this.client.query(queries.insert.businesses)
-            console.log(res)
-            res = await this.client.query(queries.insert.services)
-            console.log(res)
-            res = await this.client.query(queries.insert.schedules)
-            console.log(res)
-            res = await this.client.query(queries.insert.sessions)
-            console.log(res)
-            res = await this.client.query(queries.insert.bookings)
+            res = await this.client.query(queries.insertSampleData)
             console.log(res)
             res = await this.client.query(queries.foreignChecks.on)
             console.log(res)
@@ -83,6 +67,7 @@ class Connection {
             }
          } catch (err) {
             console.error(err);
+            return err
          } finally {
             await this.client.end();
             return res;

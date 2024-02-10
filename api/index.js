@@ -45,23 +45,34 @@ app.get('/businesses', validateAccessToken, async (req, res) => {
   res.status(200).json(q.rows);
 });
 
-app.post('/businesses', validateAccessToken, async (req, res) => {
-  console.log("POST BUSINESS");
-  let con = new Connection();
-  con = new Connection();
-  
-});
-
 app.get('/businesses/:id', validateAccessToken, async (req, res) => {
   console.log("GET ONE BUSINESS");
   let con = new Connection()
   con = new Connection()
-  let business = await con.query(queries.select.businesses.one, [req.params.id])
+  let business = await con.query(queries.businesses.select.one, [req.params.id])
   if (business.rowCount === 0) {
     res.status(204).json("");
   } else {
     res.status(200).json(business.rows);
   }
+});
+
+
+app.post('/businesses', validateAccessToken, async (req, res) => {
+  console.log("POST BUSINESS");
+  const qParams = [] 
+  Object.entries(req.body).forEach((entry) => {
+    const [key, value] = entry;
+    qParams.push(value);
+  });
+  let con = new Connection();
+  con = new Connection();
+  let business = await con.query(queries.businesses.insert.one, qParams)
+  console.log(business)
+  if (business instanceof Error) {
+    res.status(400).json(business)
+  }
+  res.status(200).json("New business inserted.")
 });
 
 app.get('/reset', validateAccessToken, async (req, res) => {

@@ -3,10 +3,17 @@ import { PageLoader } from "../components/page-loader"
 import { useAuth0 } from "@auth0/auth0-react"
 import { PhoneInput } from "../components/phoneInput";
 import TimezoneSelect, { ITimezoneOption, type ITimezone } from 'react-timezone-select'
+import { APIMethods, useAPI } from "../hooks/useApi";
+import { useNavigate } from "react-router";
 
 
 export default function CreateBusiness(){
+    // api calls
     const { getIdTokenClaims } = useAuth0();
+    const [api, response] = useAPI();
+    const navigate = useNavigate();
+
+    // state variables
     const [email, setEmail] = useState<string>('');
     const [first, setFirst] = useState<string>('');
     const [last, setLast] = useState<string>('');
@@ -18,22 +25,25 @@ export default function CreateBusiness(){
     const [userID, setUserID] = useState('');
     const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>(
         Intl.DateTimeFormat().resolvedOptions().timeZone
-      )
- 
+      );
+    
+    // Get Auth0 user data
     const getUserData = async () => {
         const userData = await getIdTokenClaims();
         if (userData?.email){
             setUserID(userData.sub)
             setEmail(userData.email);
         }
-    }
+    };
 
+    // Format zip to only digits and max of 5
     const formatZip = (input: string) => {
         let zipcode = input.replace(/\D/g, '').substring(0, 5);
         setZip(zipcode);
-    }
+    };
 
-    const postBusiness = (e: React.FormEvent) => {
+    // post business to the server
+    const postBusiness = async (e: React.FormEvent) => {
         e.preventDefault()
         const data = {
             id: userID,
@@ -47,9 +57,18 @@ export default function CreateBusiness(){
             postal_code: zip,
             timezone: selectedTimezone
         }
-        console.log(data)
+        if (api.businesses) {
+            const businesses = api.businesses as APIMethods;
+            await businesses.post(data);
+            if (response.status == 400) {
+                console.error(response.data);
+            } else {
+                navigate('/Dashboard');
+            }
+        }
     }
 
+    // Get user data on mount to preset ID and email
     useEffect(() => {
         getUserData();
     },[])
