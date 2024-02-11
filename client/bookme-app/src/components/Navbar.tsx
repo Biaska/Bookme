@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAPI } from "../hooks/useApi";
-import Toast from "./Toast";
+import useToast from "./Toast";
 
 const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();
@@ -10,11 +10,15 @@ const LoginButton = () => {
 
 const Navbar: React.FC = () => {
     const [api, response] = useAPI();
+    
+    // toast
+    const [Toast, setToast] = useToast();
+
     const resetDatabase = async () => {
         if (api.reset){
           api.reset()
         }
-        return <Toast message="Database Reset"/>
+        setToast("Database Reset")
       }
     return(
         <>
@@ -25,6 +29,7 @@ const Navbar: React.FC = () => {
                     <li className="nav-item"><LoginButton /></li>
                 </ul>
             </div>
+            <Toast/>
         </>
     )
 }

@@ -13,6 +13,7 @@ export default function CreateBusiness(){
     const [api, response] = useAPI();
     const navigate = useNavigate();
 
+
     // state variables
     const [email, setEmail] = useState<string>('');
     const [first, setFirst] = useState<string>('');

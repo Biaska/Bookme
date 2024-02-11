@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from 'react';
 
-interface ToastProps {
-  message: string;
+// interface ToastProps {
+//     visible: Boolean
+//     message: string;
+// }
+const useToast = (): [React.FC, (msg: string) => void] => {
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState<string>('');
+
+    const setToast = (msg: string) => {
+        setMessage(msg)
+        setVisible(true)
+        const timeout = setTimeout(() => {
+            setVisible(false);
+          }, 5000);
+      
+          return () => {
+            clearTimeout(timeout);
+          }
+        }
+
+    const Toast: React.FC = () => {
+
+        return visible ? (
+          <div className="toast">
+            <div className="toast-message">{message}</div>
+          </div>
+        ) : null;
+      };
+      
+      return [Toast, setToast];
+
 }
 
-const Toast: React.FC<ToastProps> = ({ message }) => {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setVisible(false);
-    }, 5000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  return visible ? (
-    <div className="toast">
-      <div className="toast-message">{message}</div>
-    </div>
-  ) : null;
-};
-
-export default Toast;
+export default useToast;
