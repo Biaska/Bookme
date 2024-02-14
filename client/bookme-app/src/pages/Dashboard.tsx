@@ -3,7 +3,7 @@ import { APIMethods, useAPI } from "../hooks/useApi";
 import { useEffect, useState } from "react";
 import { PageLoader } from "../components/page-loader";
 import { Navigate, useNavigate } from "react-router-dom";
-import Toast from "../components/Toast";
+import Toast from "../hooks/useToast";
 
 const LogoutButton = () => {
   const { logout } = useAuth0();

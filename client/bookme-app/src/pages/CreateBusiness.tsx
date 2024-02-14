@@ -5,6 +5,7 @@ import { PhoneInput } from "../components/phoneInput";
 import TimezoneSelect, { ITimezoneOption, type ITimezone } from 'react-timezone-select'
 import { APIMethods, useAPI } from "../hooks/useApi";
 import { useNavigate } from "react-router";
+import ToolTip from "../components/ToolTip";
 
 
 export default function CreateBusiness(){
@@ -76,6 +77,7 @@ export default function CreateBusiness(){
 
     return (
     <>
+        <h3>Thank you for signing up. Enter your business details so you can host your services.</h3>
         <form onSubmit={(e)=>{postBusiness(e)}}>
             <div className="input-group">
                 <div className="label-group">
@@ -127,7 +129,7 @@ export default function CreateBusiness(){
             </div>
             <div className="input-group">
                 <div className="label-group">
-                    <label htmlFor="zip">Postal Code</label>
+                    <label htmlFor="zip">Timezone<ToolTip tooltipText="Setting your timezone will change what timezone your services will be presented in."/></label>
                 </div>
                 <TimezoneSelect
                     value={selectedTimezone}

@@ -8,6 +8,7 @@ import Home from './pages/Home.tsx';
 import Layout from "./components/Layout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import { Auth } from "./components/auth.tsx";
+import VendorLanding  from "./pages/VendorLanding.tsx";
 
 export default function Router() {
     return (
@@ -27,6 +28,10 @@ export default function Router() {
                     <Route
                         path='/BusinessInit'
                         element={<Auth component={CreateBusiness}/>}
+                    />
+                    <Route 
+                        path="Vendors"
+                        element={<VendorLanding />}
                     />
             </Route>
         </Routes>

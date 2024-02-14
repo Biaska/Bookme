@@ -1,6 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAPI } from "../hooks/useApi";
-import useToast from "./Toast";
+import useToast from "../hooks/useToast";
+
+interface NavbarProps {
+    location: string
+};
 
 const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();
@@ -8,7 +12,7 @@ const LoginButton = () => {
     return <button onClick={() => loginWithRedirect()}>Log In</button>;
   };
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<NavbarProps> = (NavbarProps) => {
     const [api, response] = useAPI();
 
     // toast
@@ -25,8 +29,9 @@ const Navbar: React.FC = () => {
             <div className="nav">
                 <a href="/"><img id="logo" src="/bookme-word-logo.png" alt="Bookme" /></a>
                 <ul className="nav-list">
-                    <button onClick={()=>resetDatabase()}>Reset Database</button>
-                    <LoginButton />
+                    {NavbarProps.location === "/Dashboard" ? <button onClick={()=>resetDatabase()}>Reset Database</button> : <></>}
+                    {NavbarProps.location === "/Vendors" ? <LoginButton /> : <></>}
+                    {NavbarProps.location === "/" ? <button><a href="/Vendors">Vendors</a></button> : <></>}
                 </ul>
             </div>
             <Toast/>

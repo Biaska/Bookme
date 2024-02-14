@@ -154,6 +154,7 @@ input:disabled {
   min-width: 100%;
   align-items: center;
   justify-content: right;
+
 }
 
 .input-group > input {
@@ -189,4 +190,55 @@ input:disabled {
 
 .toast-message {
   word-wrap: break-word;
+}
+
+form > button {
+  margin: 1rem 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.text-body {
+  margin: 2rem auto;
+  width: 50%;
+}
+
+.tool-tip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  top: -35px;
+  left: 10px;
+
+}
+
+.tt-question-mark {
+  font-size: small;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: lightblue;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.tt-text-box {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 5px;
+  min-width: 500px;
+  white-space: pre-line;
+  z-index: 999;
 }
