@@ -35,6 +35,23 @@ class Connection {
         }
     } 
 
+    async connect() {
+        await this.client.connect();
+    }
+
+    async openQuery(query, parameters) {
+        if (parameters === undefined) {
+            res = await this.client.query(query);
+        } else {
+            res = await this.client.query(query, parameters);
+        }
+        return res
+    }
+
+    async end() {
+        await this.client.end();
+    }
+
     async insertSampleData() {
         await this.client.connect();
 

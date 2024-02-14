@@ -83,9 +83,4 @@ app.get('/reset', validateAccessToken, async (req, res) => {
 });
 
 
-const server = app.listen(PORT, () => {
-  console.log(`Bookme server listening on port ${PORT}`)
-});
-
-server.keepAliveTimeout = 120 * 1000;
-server.headersTimeout = 120 * 1000;
+module.exports = app

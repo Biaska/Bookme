@@ -5,12 +5,12 @@ import useToast from "./Toast";
 const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();
   
-    return <a onClick={() => loginWithRedirect()}>Log In</a>;
+    return <button onClick={() => loginWithRedirect()}>Log In</button>;
   };
 
 const Navbar: React.FC = () => {
     const [api, response] = useAPI();
-    
+
     // toast
     const [Toast, setToast] = useToast();
 
@@ -25,8 +25,8 @@ const Navbar: React.FC = () => {
             <div className="nav">
                 <a href="/"><img id="logo" src="/bookme-word-logo.png" alt="Bookme" /></a>
                 <ul className="nav-list">
-                    <li><button onClick={()=>resetDatabase()}>Reset Database</button></li>
-                    <li className="nav-item"><LoginButton /></li>
+                    <button onClick={()=>resetDatabase()}>Reset Database</button>
+                    <LoginButton />
                 </ul>
             </div>
             <Toast/>

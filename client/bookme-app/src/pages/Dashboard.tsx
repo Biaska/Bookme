@@ -30,10 +30,6 @@ export default function Dashboard() {
     }
   }
 
-  const doToast = () => {
-    return 
-  }
-
   useEffect(() => {
     getUser();
   }, [])
@@ -47,9 +43,7 @@ export default function Dashboard() {
     }
 
     return(
-        <>  
-            <Toast message="sample toast"/>
-            <button onClick={()=>doToast()}>Try Toast</button>
+        <> 
             <LogoutButton />
             <h1>Dashboard</h1>
         </>

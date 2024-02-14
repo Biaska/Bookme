@@ -106,6 +106,12 @@ const queries = {
             (1, 'Stella Starlight', 'stella.starlight@example.com', 'Confirmed', '2024-03-05 11:30:00', 'UTC'),
             (2, 'Orion Nebula', 'orion.nebula@example.com', 'Pending', '2024-03-10 14:15:00', 'GMT'),
             (3, 'Andromeda Galaxy', 'andromeda.galaxy@example.com', 'Confirmed', '2024-03-15 10:45:00', 'UTC');`,
+    tests: {
+        createBusiness: `INSERT INTO Businesses (id, name, email, phone_number, street_address, city, state, postal_code, country, website, timezone)
+        VALUES
+            (1, 'Cosmic Creations', 'info@cosmiccreations.com', '123-456-7890', '42 Galaxy Lane', 'Stellaria', 'Nebula', 'CC123', 'Cosmos', 'www.cosmiccreations.com', 'UTC');`,
+        deleteBusiness: `DELETE FROM Businesses WHERE id = 1;`
+    },
     businesses: {
         select: {
             all: "SELECT * from Businesses;",
