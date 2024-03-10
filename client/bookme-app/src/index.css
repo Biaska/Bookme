@@ -40,16 +40,17 @@ h1 {
 
 .page {
   display: flex;
-  flex-flow: column;
-  height: 100%;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .content {
-  min-width: 300px;
+  flex: 1;
   margin: auto;
-  padding: 10% 0;
+  padding: 5%;
   text-align: center;
   align-items: center;
+  min-height: max-content;
 }
 
 .nav {
@@ -105,7 +106,7 @@ h1 {
   padding-top: 12%;
 }
 
-input {
+input, select, textarea {
   background-color: #fff;
   margin: .5rem;
   border: solid 1px  hsl(0, 0%, 80%);;
@@ -114,6 +115,11 @@ input {
   color: var(--grey-900);
   min-height: 38px;
 }
+
+select {
+  width: 100%;
+}
+
 form {
   display: flex;
   flex-flow: column;
@@ -241,4 +247,14 @@ a {
   min-width: 500px;
   white-space: pre-line;
   z-index: 999;
+}
+
+.services-dashboard {
+  min-width: 90%;
+  margin: auto 4rem;
+  min-height: 90%;
+}
+
+.services-header {
+  text-align: right;
 }

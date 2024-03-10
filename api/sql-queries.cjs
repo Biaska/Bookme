@@ -120,6 +120,15 @@ const queries = {
         insert: {
             one: "INSERT INTO Businesses VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *"
         }
+    },
+    services: {
+        select: {
+            all: "SELECT * FROM Services",
+            business:"SELECT * FROM Services WHERE id = $1"
+        },
+        insert: {
+            one: "INSERT INTO Services VALUES($1, $2, $3, $4)"
+        }
     }
 }
 

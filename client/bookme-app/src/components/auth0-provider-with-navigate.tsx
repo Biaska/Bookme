@@ -34,6 +34,8 @@ export const Auth0ProviderWithNavigate = ({
         scope: "read:current_user update:current_user_metadata openid email profile",
       }}
       onRedirectCallback={onRedirectCallback}
+      useRefreshTokens={true}
+      cacheLocation="localstorage"
     >
       {children}
     </Auth0Provider>

@@ -9,6 +9,7 @@ import Layout from "./components/Layout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import { Auth } from "./components/auth.tsx";
 import VendorLanding  from "./pages/VendorLanding.tsx";
+import CreateService from "./pages/CreateService.tsx";
 
 export default function Router() {
     return (
@@ -24,6 +25,10 @@ export default function Router() {
                     <Route 
                         path="/Dashboard"
                         element={<Auth component={Dashboard} />}
+                    />
+                    <Route
+                        path="/CreateService"
+                        element={<Auth component={CreateService}/>}    
                     />
                     <Route
                         path='/BusinessInit'
