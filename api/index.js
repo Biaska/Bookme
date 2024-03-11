@@ -75,8 +75,8 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
   res.status(200).json("New business inserted.")
 });
 
-app.get('/businessService/:id', validateAccessToken, async (req, res) => {
-  console.log("GET ONE BUSINESS");
+app.get('/businessServices/:id', validateAccessToken, async (req, res) => {
+  console.log("GET Business Services");
   let con = new Connection()
   con = new Connection()
   let business = await con.query(queries.services.select.business, [req.params.id])
@@ -105,6 +105,7 @@ app.post('/services', validateAccessToken, async (req, res) => {
   });
   let con = new Connection();
   con = new Connection();
+  console.log(qParams)
   let service = await con.query(queries.services.insert.one, qParams)
   console.log(service)
   if (service instanceof Error) {

@@ -51,6 +51,7 @@ h1 {
   text-align: center;
   align-items: center;
   min-height: max-content;
+  min-width: 90%;
 }
 
 .nav {
@@ -250,11 +251,30 @@ a {
 }
 
 .services-dashboard {
-  min-width: 90%;
-  margin: auto 4rem;
+  max-width: 100%;
+  margin: auto;
   min-height: 90%;
+  border-radius: 3px;
+  padding: 5%;
+  box-shadow: 0px 0px 5px 5px #e7e7e7;
 }
 
 .services-header {
   text-align: right;
+  padding: 2%
+}
+
+.service-card {
+  width: 30%;
+  /* height: 20%; */
+  padding: none 3%;
+  border-radius: 2px;
+  box-shadow: 0px 0px 5px 5px #e7e7e7;
+  display: inline-block;
+  /* flex-direction: column; */
+}
+
+.service-card > h2 {
+  min-width: 100%;
+  border-bottom: 1px solid #000;
 }

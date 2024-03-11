@@ -29,7 +29,7 @@ interface ApiOptions {
 }
 
 const apiURI = "http://localhost:6060/"
-const entityPaths = ['businesses', 'services', 'schedules', 'sessions', 'bookings']
+const entityPaths = ['businesses', 'services', 'schedules', 'sessions', 'bookings', 'businessServices']
 
 export function useAPI() {
   const [status, setStatus] = useState<Number>(0);

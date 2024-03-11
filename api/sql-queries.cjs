@@ -29,6 +29,7 @@ const queries = {
             businessId VARCHAR(30) NOT NULL,
             name VARCHAR(255) NOT NULL,
             description TEXT,
+            type VARCHAR(30) NOT NULL,
             price DECIMAL(10, 2),
             duration INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -124,10 +125,10 @@ const queries = {
     services: {
         select: {
             all: "SELECT * FROM Services",
-            business:"SELECT * FROM Services WHERE id = $1"
+            business:"SELECT * FROM Services WHERE businessID = $1"
         },
         insert: {
-            one: "INSERT INTO Services VALUES($1, $2, $3, $4)"
+            one: "INSERT INTO Services(businessID, name, description, type, price, duration) VALUES($1, $2, $3, $4, $5, $6)"
         }
     }
 }

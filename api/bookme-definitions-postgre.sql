@@ -28,9 +28,10 @@ CREATE TABLE Businesses (
 -- Create Services Table: Represents services offered by businesses.
 CREATE TABLE Services (
     id SERIAL PRIMARY KEY,
-    businessId INT NOT NULL,
+    businessId VARCHAR(30) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    type VARCHAR(30) NOT NULL,
     price DECIMAL(10, 2),
     duration INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

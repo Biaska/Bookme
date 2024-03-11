@@ -9,33 +9,46 @@ import Toast from "../hooks/useToast";
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
-  const [api, response] = useAPI();
+  const [businessAPI, businessResponse] = useAPI();
+  const [serviceAPI, serviceResponse] = useAPI();
   const { user: authUser } = useAuth0();
-  const [services, setServices] = useState(null);
+  const [services, setServices] = useState<any[]>([]);
+  const isLoading = businessResponse.loading && serviceResponse.loading
   const navigate = useNavigate();
 
   const getUser = async () => {
-    if (api.businesses) {
-      const businesses = api.businesses as APIMethods
+    if (businessAPI.businesses) {
+      const businesses = businessAPI.businesses as APIMethods
       if (authUser?.sub) {
         await businesses.getOne(authUser.sub);
       }
-      if (response.status === 204) {
+      if (businessResponse.status === 204) {
         navigate('/BusinessInit');
       }
     }
-    const serverResponse = await fetch(`http://localhost:6060/businessService/${authUser?.sub}`);
-    const data = await serverResponse.json();
-    if (data.status === 200) {
-      setServices(data.body);
+  }
+
+  const getServices = async () => {
+    if (serviceAPI.businessServices) {
+      const services = serviceAPI.businessServices as APIMethods
+      if (authUser?.sub) {
+        await services.getOne(authUser.sub);
+        if (serviceResponse.status === 200) {
+          setServices(serviceResponse.data);
+        }
+      }
     }
   }
 
   useEffect(() => {
     getUser();
   }, [])
+
+  useEffect(() => {
+    getServices();
+  }, [businessResponse.status]);
     
-    if (response.status === 0) {
+    if (isLoading === true) {
       return <PageLoader />
     }
 
@@ -45,7 +58,17 @@ export default function Dashboard() {
               <div className="services-header">
                 <button><a href="/CreateService">Create Service</a></button>
               </div>
-              {services === null ? <h2>You have not created any services. Create a service to manage them.</h2> : <p>Services</p>}
+              {services.length === 0 ? <h2>You have not created any services. Create a service to manage them.</h2> : 
+              <>
+                <h2>Services</h2>
+                {services.map((service, id) => (
+                  <div key={id} className="service-card">
+                    <h2>{service.name}</h2>
+                    <p>{service.description}</p>
+                  </div>
+                ))}
+              </>
+              }
             </div>
         </>
     )

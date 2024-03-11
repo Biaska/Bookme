@@ -15,7 +15,9 @@ export default function CreateService(){
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [type, setType] = useState<string>('');
-    const [businessID, setBusinessID] = useState<string>('')
+    const [price, setPrice] = useState<number>(0);
+    const [duration, setDuration] = useState<number>(0);
+    const [businessID, setBusinessID] = useState<string>('');
 
     const getBusiness = async () => {
         if (user?.sub) {
@@ -27,10 +29,12 @@ export default function CreateService(){
     const postService = async (e: React.FormEvent) => {
         e.preventDefault()
         const data = {
-            title: title,
+            businessID: businessID,
+            name: title,
             description: description,
             type: type,
-            businessID: businessID,
+            price: price,
+            duration: duration,
         }
         if (api.services) {
             const services = api.services as APIMethods;
@@ -73,6 +77,27 @@ export default function CreateService(){
                     <option value="Class">Class</option>
                     <option value="Appointment">Appointment</option>
                 </select>
+            </div>
+            <div className="input-group">
+                <div className="label-group">
+                    <label htmlFor="price">Price</label>
+                </div>
+                <input type="number" step={.2} id="price" value={price} onChange={(e)=>setPrice(parseFloat(e.target.value))}/>
+            </div>
+            <div className="input-group">
+                <div className="label-group">
+                    <label htmlFor="duration">Duration</label>
+                </div>
+                <input 
+                    type="number" 
+                    step={1} 
+                    id="duration" 
+                    value={duration} 
+                    onChange={(e)=>{
+                        setDuration(isNaN(parseInt(e.target.value)) ? 
+                            0 :
+                            parseInt(e.target.value))}
+                }/>
             </div>
             <button type="submit">Submit</button>
         </form>
