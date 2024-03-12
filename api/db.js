@@ -4,6 +4,8 @@ const queries = require('./sql-queries.cjs')
 
 class Connection {
 
+    // Connect to database and save client 
+
     constructor() {
         this.client = new Client({
             user: process.env.POSTGRESQL_USER,
@@ -16,6 +18,9 @@ class Connection {
     }
 
     async resetDatabase() {
+
+        // USED FOR DEVELOPMENT
+        // Resets the database to it's initial state 
         await this.client.connect();
 
         try {
@@ -36,10 +41,18 @@ class Connection {
     } 
 
     async connect() {
+
+        // Connect to saved client
+
         await this.client.connect();
     }
 
     async openQuery(query, parameters) {
+
+        // Query database
+        // Optional: pass in parameters to make a call using pq library's 
+        // parameterized queries
+
         if (parameters === undefined) {
             res = await this.client.query(query);
         } else {
@@ -49,10 +62,14 @@ class Connection {
     }
 
     async end() {
+
         await this.client.end();
     }
 
     async insertSampleData() {
+
+        // insert sample data for testing
+
         await this.client.connect();
 
         try {
@@ -72,8 +89,13 @@ class Connection {
 
     async query(stringQuery, parameters) {
 
+        // Query database
+        // Optional: pass in parameters to make a call using pq library's 
+        // parameterized queries
+
         await this.client.connect();       
 
+        // response
         let res;
 
         try {
@@ -82,9 +104,11 @@ class Connection {
             } else {
                 res = await this.client.query(stringQuery, parameters);
             }
+
          } catch (err) {
             console.error(err);
             return err
+            
          } finally {
             await this.client.end();
             return res;

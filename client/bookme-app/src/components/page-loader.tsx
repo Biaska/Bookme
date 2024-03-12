@@ -5,7 +5,7 @@ export const PageLoader: React.FC = () => {
 
   return (
     <div className="loader">
-      <img src={loadingImg} alt="Loading..." />
+      <img src={loadingImg} width={100} alt="Loading..." />
     </div>
   );
 };

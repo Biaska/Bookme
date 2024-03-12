@@ -265,13 +265,16 @@ a {
 }
 
 .service-card {
-  width: 30%;
-  /* height: 20%; */
-  padding: none 3%;
+  width: 20%;
+  margin: 0 5%;
+  padding: 0 3%;
   border-radius: 2px;
   box-shadow: 0px 0px 5px 5px #e7e7e7;
   display: inline-block;
-  /* flex-direction: column; */
+}
+
+.service-card:hover {
+  cursor: pointer;
 }
 
 .service-card > h2 {
