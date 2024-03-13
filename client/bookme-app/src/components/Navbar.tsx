@@ -1,7 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAPI } from "../hooks/useApi";
 import useToast from "../hooks/useToast";
-import { useLocation } from "react-router-dom";
+
+interface NavbarProps {
+    location: string
+};
 
 const LogoutButton = () => {
     const { logout } = useAuth0();
@@ -19,10 +22,10 @@ const LoginButton = () => {
     return <button onClick={() => loginWithRedirect()}>Log In</button>;
   };
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<NavbarProps> = (NavbarProps) => {
     const [api, response] = useAPI();
-    const location = useLocation()
 
+    // toast
     const [Toast, setToast] = useToast();
 
     const resetDatabase = async () => {
@@ -36,10 +39,10 @@ const Navbar: React.FC = () => {
             <div className="nav">
                 <a href="/"><img id="logo" src="/bookme-word-logo.png" alt="Bookme" /></a>
                 <ul className="nav-list">
-                    {location.pathname.match("Dashboard") !== null ? <LogoutButton /> : <></>}
-                    {location.pathname === "/Dashboard" ? <button onClick={()=>resetDatabase()}>Reset Database</button> : <></>}
-                    {location.pathname === "/Vendors" ? <LoginButton /> : <></>}
-                    {location.pathname === "/" ? <button><a href="/Vendors">Vendors</a></button> : <></>}
+                    {NavbarProps.location.match("Dashboard") !== null ? <LogoutButton /> : <></>}
+                    {NavbarProps.location === "/Dashboard" ? <button onClick={()=>resetDatabase()}>Reset Database</button> : <></>}
+                    {NavbarProps.location === "/Vendors" ? <LoginButton /> : <></>}
+                    {NavbarProps.location === "/" ? <button><a href="/Vendors">Vendors</a></button> : <></>}
                 </ul>
             </div>
             <Toast/>

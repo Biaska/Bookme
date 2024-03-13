@@ -5,7 +5,7 @@ import { PageLoader } from "../components/page-loader";
 import { Navigate, useNavigate } from "react-router-dom";
 import Toast from "../hooks/useToast";
 
-const dashboardLoader = async () => {
+const DashboardLoader = async () => {
     const [businessAPI, businessResponse] = useAPI();
   const [serviceAPI, serviceResponse] = useAPI();
   const { user: authUser } = useAuth0();
@@ -36,4 +36,4 @@ const dashboardLoader = async () => {
   
   return(services)
 }
-export default dashboardLoader;
+export default DashboardLoader;
