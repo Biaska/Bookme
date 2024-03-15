@@ -125,6 +125,7 @@ const queries = {
     services: {
         select: {
             all: "SELECT * FROM Services",
+            one: "SELECT * FROM Services WHERE id = $1",
             business:"SELECT * FROM Services WHERE businessID = $1"
         },
         insert: {

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface Service {
-    name: string;
-    description: string;
-}
+import { Service } from '../types/Service';
 
 interface ServiceCardProps {
     service: Service;
     id: number;
+    key: number;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, id }) => {
@@ -16,7 +13,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, id }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/Service/${id}`);
+        navigate(`/BusinessService/${service.id}`);
     }
 
     return (

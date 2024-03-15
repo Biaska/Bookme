@@ -136,7 +136,7 @@ export default function CreateBusiness(){
                     onChange={setSelectedTimezone}
                     className="input"
                     />
-                </div>
+            </div>
             <button type="submit">Submit</button>
         </form>
     </>

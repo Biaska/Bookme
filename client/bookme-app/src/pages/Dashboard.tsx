@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PageLoader } from "../components/page-loader";
 import { Navigate, useNavigate } from "react-router-dom";
 import Toast from "../hooks/useToast";
+import ServiceCard from "../components/ServiceCard";
 
 
 
@@ -13,7 +14,7 @@ export default function Dashboard() {
   const [serviceAPI, serviceResponse] = useAPI();
   const { user: authUser } = useAuth0();
   const [services, setServices] = useState<any[]>([]);
-  const isLoading = businessResponse.loading && serviceResponse.loading
+  let isLoading = businessResponse.loading && serviceResponse.loading
   const navigate = useNavigate();
 
   const getUser = async () => {
@@ -62,10 +63,7 @@ export default function Dashboard() {
               <>
                 <h2>Services</h2>
                 {services.map((service, id) => (
-                  <div key={id} className="service-card">
-                    <h2>{service.name}</h2>
-                    <p>{service.description}</p>
-                  </div>
+                  <ServiceCard key={id} service={service} id={id} />
                 ))}
               </>
               }

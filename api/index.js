@@ -5,6 +5,7 @@ const cors = require("cors");
 const { auth } = require("express-oauth2-jwt-bearer");
 const Connection = require('./db.js');
 const queries = require('./sql-queries.cjs')
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 dotenv.config();
 
@@ -121,7 +122,8 @@ app.get('/services', validateAccessToken, async (req, res) => {
 app.post('/services', validateAccessToken, async (req, res) => {
   console.log("POST Service");
 
-  // Get query parameters from request
+  try {
+    // Get query parameters from request
   const qParams = [] 
   Object.entries(req.body).forEach((entry) => {
     const [key, value] = entry;
@@ -132,13 +134,58 @@ app.post('/services', validateAccessToken, async (req, res) => {
   con = new Connection();
   let service = await con.query(queries.services.insert.one, qParams)
 
-  // Error calling db
-  if (service instanceof Error) {
-    res.status(400).json(service)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error: "Internal Service Error"})
   }
-
   res.status(200).json("New service inserted.")
 });
+
+// Get one service
+app.get('/services/:id', validateAccessToken, async (req, res) => {
+  console.log("GET One Service");
+
+  let con = new Connection()
+  con = new Connection()
+  let service = await con.query(queries.services.select.one, [req.params.id])
+  
+  if (service.rowCount === 0) {
+    res.status(204).json("No businesses found");
+  } else {
+    res.status(200).json(service.rows[0]);
+  }
+});
+
+// Create a schedule
+app.post('/schedules', validateAccessToken, async (req, res) => {
+  console.log("Attempting to create schedule...")
+  try {
+    let data = req.body
+    const response = await fetch("http://24.21.81.89:10441/schedule", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const serverResponse = await response.json();
+    console.log(serverResponse);
+
+    if (response.status === 500) {
+      console.log(serverResponse)
+      res.status(500).json({ 
+        error: 'api error',
+        message: serverResponse,
+     })
+    }
+    // Set Access-Control-Allow-Origin header to allow cross-origin requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.status(200).json(serverResponse)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
 
 // USED FOR DEVELOPMENT
 // Reset the database
