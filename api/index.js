@@ -6,6 +6,11 @@ const { auth } = require("express-oauth2-jwt-bearer");
 const Connection = require('./db.js');
 const queries = require('./sql-queries.cjs')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const NodeGeocoder = require('node-geocoder');
+const getBusinessesWithinRadius = require('./utils/geocode.js')
+
+// Location service
+const geocoder = NodeGeocoder({ provider: 'openstreetmap' });
 
 dotenv.config();
 
@@ -44,7 +49,6 @@ app.get('/businesses', validateAccessToken, async (req, res) => {
     console.log("GET Businesses")
 
     let con = new Connection()
-    con = new Connection()
     let q = await con.query('select * from Businesses')
     
     res.status(200).json(q.rows);
@@ -55,7 +59,6 @@ app.get('/businesses/:id', validateAccessToken, async (req, res) => {
   console.log("GET ONE BUSINESS");
 
   let con = new Connection()
-  con = new Connection()
   let business = await con.query(queries.businesses.select.one, [req.params.id])
   
   if (business.rowCount === 0) {
@@ -77,7 +80,6 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
   });
 
   let con = new Connection();
-  con = new Connection();
   let business = await con.query(queries.businesses.insert.one, qParams);
   
   // Error querying db
@@ -93,8 +95,6 @@ app.get('/businessServices/:id', validateAccessToken, async (req, res) => {
   console.log("GET Business Services");
 
   let con = new Connection()
-  con = new Connection()
-
   let business = await con.query(queries.services.select.business, [req.params.id])
   
   // If row not found
@@ -111,7 +111,6 @@ app.get('/services', validateAccessToken, async (req, res) => {
   console.log("GET")
 
   let con = new Connection()
-  con = new Connection()
   let q = await con.query('select * from Services')
 
   res.status(200).json(q.rows);
@@ -131,7 +130,6 @@ app.post('/services', validateAccessToken, async (req, res) => {
   });
 
   let con = new Connection();
-  con = new Connection();
   let service = await con.query(queries.services.insert.one, qParams)
 
   } catch (error) {
@@ -146,7 +144,6 @@ app.get('/services/:id', validateAccessToken, async (req, res) => {
   console.log("GET One Service");
 
   let con = new Connection()
-  con = new Connection()
   let service = await con.query(queries.services.select.one, [req.params.id])
   
   if (service.rowCount === 0) {
@@ -168,7 +165,8 @@ app.post('/schedules', validateAccessToken, async (req, res) => {
       },
       body: JSON.stringify(data),
     });
-    const serverResponse = await response.json();
+
+    const serverResponse = await response.json();4
     console.log(serverResponse);
 
     if (response.status === 500) {
@@ -184,6 +182,29 @@ app.post('/schedules', validateAccessToken, async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+app.post('/search', async (req, res) => {
+  const { zipCode, radius } = req.body;
+
+  try {
+      let coordinates;
+
+      if (zipCode) {
+          coordinates = await geocoder.geocode(zipCode);
+      } else {
+          return res.status(400).json({ error: 'Zip code is required' });
+      }
+
+      const userLatitude = coordinates[0].latitude;
+      const userLongitude = coordinates[0].longitude;
+
+      const businesses = await getBusinessesWithinRadius(userLatitude, userLongitude, radius)
+      res.status(200).json(businesses); 
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
   }
 })
 
