@@ -11,6 +11,7 @@ import { Auth } from "./components/auth.tsx";
 import VendorLanding  from "./pages/VendorLanding.tsx";
 import CreateService from "./pages/CreateService.tsx";
 import BusinessService from "./pages/BusinessService.tsx";
+import SearchResults from "./pages/SearchResults.tsx";
 
 export default function Router() {
     return (
@@ -40,8 +41,12 @@ export default function Router() {
                         element={<Auth component={BusinessService} />}
                     />
                     <Route 
-                        path="Vendors"
+                        path="/Vendors"
                         element={<VendorLanding />}
+                    />
+                    <Route 
+                        path="/SearchResults"
+                        element={<SearchResults  />}
                     />
             </Route>
         </Routes>

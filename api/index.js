@@ -7,7 +7,7 @@ const Connection = require('./db.js');
 const queries = require('./sql-queries.cjs')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const NodeGeocoder = require('node-geocoder');
-const getBusinessesWithinRadius = require('./utils/geocode.js')
+const { getBusinessesWithinRadius, geocodeAddress }  = require('./utils/geocode.js')
 
 // Location service
 const geocoder = NodeGeocoder({ provider: 'openstreetmap' });
@@ -185,23 +185,25 @@ app.post('/schedules', validateAccessToken, async (req, res) => {
   }
 })
 
+// User Search for nearby services
 app.post('/search', async (req, res) => {
-  const { zipCode, radius } = req.body;
-
   try {
       let coordinates;
+      const { zipCode, radius } = req.body;
 
+      // get user coordinates
       if (zipCode) {
-          coordinates = await geocoder.geocode(zipCode);
+          coordinates = await geocodeAddress(zipCode);
       } else {
           return res.status(400).json({ error: 'Zip code is required' });
       }
+      const userLatitude = coordinates.latitude;
+      const userLongitude = coordinates.longitude;
 
-      const userLatitude = coordinates[0].latitude;
-      const userLongitude = coordinates[0].longitude;
-
+      // get all nearby businesses
       const businesses = await getBusinessesWithinRadius(userLatitude, userLongitude, radius)
       res.status(200).json(businesses); 
+
   } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });

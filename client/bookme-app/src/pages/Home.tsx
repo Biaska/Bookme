@@ -1,10 +1,12 @@
 import { useState } from "react";
 import "./home.css";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
     const [zip, setZip] = useState('');
     const [keyword, setKeyword] = useState('');
     const [miles, setMiles] = useState<number>(15)
+    const navigate = useNavigate();
 
     // Format zip to only digits and max of 5
     const formatZip = (input: string) => {
@@ -14,22 +16,12 @@ const Home: React.FC = () => {
 
     // Search for services within radius
     const handleSearch = async () => {
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(
-                {
-                    zipCode: zip,
-                    keyword: keyword,
-                    radius: miles,
-                }
-            )
-        }
-        const response = await fetch('http://localhost:6060/search', options);
-        const data = await response.json(); 
-        console.log(data)
+        const searchParams = {
+            zip: zip,
+            keyword: keyword,
+            miles:miles,
+        };
+        navigate('/SearchResults', { state: searchParams });
     }
 
     return (
