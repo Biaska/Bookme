@@ -12,6 +12,7 @@ import VendorLanding  from "./pages/VendorLanding.tsx";
 import CreateService from "./pages/CreateService.tsx";
 import BusinessService from "./pages/BusinessService.tsx";
 import SearchResults from "./pages/SearchResults.tsx";
+import ServiceDetails from "./pages/ServiceDetails.tsx";
 
 export default function Router() {
     return (
@@ -47,6 +48,10 @@ export default function Router() {
                     <Route 
                         path="/SearchResults"
                         element={<SearchResults  />}
+                    />
+                    <Route
+                        path="/ServiceDetails/:serviceID"
+                        element={<ServiceDetails />}
                     />
             </Route>
         </Routes>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageLoader } from "../components/page-loader";
+import ServiceCard from "../components/ServiceCard";
 
 interface SearchParams {
     zip: number;
@@ -10,12 +11,16 @@ interface SearchParams {
 
 const SearchResults = () => {
     const { state } = useLocation();
-    const [businesses, setBusinesses] = useState([]);
+    const [services, setServices] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
+    const handleServiceClick = (id:number) => {
+        navigate(`/ServiceDetails/${id}`);
+    }
+
     // Get all businesses near the search results
-    const getBusinesses = async () => {
+    const getServices = async () => {
 
         const options = {
             method: "POST",
@@ -34,7 +39,8 @@ const SearchResults = () => {
         
         if (response.status === 200) {
             const data = await response.json(); 
-            setBusinesses(data);
+            console.log(data)
+            setServices(data);
             setIsLoading(false);
         }
     }   
@@ -44,15 +50,26 @@ const SearchResults = () => {
             navigate("/");
         }
 
-        getBusinesses();
+        getServices();
     },[])
 
     return (
         <>
-            {isLoading ? <PageLoader /> 
-                : businesses.length === 0 
-                ? <p>No services in your area</p> 
-                : <p>Services found</p>}
+            <div className="search-results-container">
+                {isLoading ? <PageLoader /> 
+                    : services.length === 0 
+                    ? <p>No services in your area</p> 
+                    : <p className="search-result-text">
+                        {services.length === 1 
+                        ? services.length + " service found..."
+                        : services.length + " services found..." 
+                    }
+                    </p>
+                }
+                {services && services.map((service, id)=> (
+                    <ServiceCard service={service} id={id} key={id} handleClick={handleServiceClick}/>
+                ))}
+            </div>
         </>
     )
 } 

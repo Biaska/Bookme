@@ -7,7 +7,8 @@ const Connection = require('./db.js');
 const queries = require('./sql-queries.cjs')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const NodeGeocoder = require('node-geocoder');
-const { getBusinessesWithinRadius, geocodeAddress }  = require('./utils/geocode.js')
+const { getBusinessesWithinRadius, geocodeAddress }  = require('./utils/geocode.js');
+const getBusinessServices = require('./utils/servicesKeywordSearch.js');
 
 // Location service
 const geocoder = NodeGeocoder({ provider: 'openstreetmap' });
@@ -140,7 +141,7 @@ app.post('/services', validateAccessToken, async (req, res) => {
 });
 
 // Get one service
-app.get('/services/:id', validateAccessToken, async (req, res) => {
+app.get('/services/:id', async (req, res) => {
   console.log("GET One Service");
 
   let con = new Connection()
@@ -189,7 +190,7 @@ app.post('/schedules', validateAccessToken, async (req, res) => {
 app.post('/search', async (req, res) => {
   try {
       let coordinates;
-      const { zipCode, radius } = req.body;
+      const { zipCode, radius, keyword } = req.body;
 
       // get user coordinates
       if (zipCode) {
@@ -202,7 +203,15 @@ app.post('/search', async (req, res) => {
 
       // get all nearby businesses
       const businesses = await getBusinessesWithinRadius(userLatitude, userLongitude, radius)
-      res.status(200).json(businesses); 
+
+      // seperate ids
+      let businessIds = []
+      for (let i=0; i<businesses.length; i++) {
+        businessIds.push(businesses[i].id);
+      }
+
+      const services = await getBusinessServices(businessIds, keyword)
+      res.status(200).json(services); 
 
   } catch (error) {
       console.error(error);

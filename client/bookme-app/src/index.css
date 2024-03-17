@@ -13,6 +13,7 @@
   --light-blue: #BBFBFF;
   --grey-900: #2c2c2c;
   --grey-300: #c0c0c0;
+  --white: #fff;
 
 
   font-synthesis: none;
@@ -310,4 +311,20 @@ a {
 .select-wrapper {
   margin-left: 50px;
   width: 300px;
+}
+
+.search-results-container {
+  width: 90%;
+  height: 90%;
+  background-color: var(--white);
+  box-shadow: 0 0 10px var(--grey-300);
+  border-radius: 10px;
+  padding: .5rem 2rem 2rem 2rem;
+  margin: auto
+}
+
+.search-result-text {
+  text-align: left;
+  color: var(--grey-300);
+  font-size: medium;
 }

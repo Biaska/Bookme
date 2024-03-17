@@ -5,7 +5,11 @@ const haversine = require("haversine");
 // Location service
 const geocoder = NodeGeocoder({ provider: 'openstreetmap' });
 
-// Get location of one zipcode
+/**
+ * Get coordinates of a zipcode
+ * @param {string} zipcode 
+ * @returns 
+ */
 const geocodeAddress = async (zipcode) => {
     try {
         const coordinates = await geocoder.geocode({
@@ -19,7 +23,13 @@ const geocodeAddress = async (zipcode) => {
     }
 };
 
-// get all businesses that are within the users radius
+/**
+ * Pass in coordinates to query database for all businesses within the radius.
+ * @param {number} userLatitude 
+ * @param {number} userLongitude 
+ * @param {number} radius 
+ * @returns 
+ */
 const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) => {
     let businesses = []; // Placeholder for fetched businesses
     try {
@@ -33,8 +43,7 @@ const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) =>
             longitude: userLongitude
         }
 
-        nearbyBusinesses = []
-        console.log(businesses)
+        let nearbyBusinesses = []
         // Then, for each business, geocode its address and calculate distance
         for (let i = 0; i<businesses.length; i++) {
             // get business coordinates
@@ -51,14 +60,15 @@ const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) =>
                 unit: 'mile'
             } 
 
-            console.log("Geocode Result: " + haversine(userLocation, businessLocation, options))
             // Business is within radius 
             if (haversine(userLocation, businessLocation, options)) {
-                businesses[i].coordinates = coordinates;
+                businesses[i].coordinates = {
+                    latitude: coordinates.latitude,
+                    longitude: coordinates.longitude,
+                };
                 nearbyBusinesses.push(businesses[i]);
             }
         }
-
         return nearbyBusinesses;
     } catch (error) {
         console.log(error)

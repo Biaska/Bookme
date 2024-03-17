@@ -1,27 +1,32 @@
-import { useAuth0 } from "@auth0/auth0-react";
+// local imports
 import { APIMethods, useAPI } from "../hooks/useApi";
-import { useEffect, useState } from "react";
 import { PageLoader } from "../components/page-loader";
-import { Navigate, useNavigate } from "react-router-dom";
-import Toast from "../hooks/useToast";
 import ServiceCard from "../components/ServiceCard";
 
-
+// library imports
+import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
   const [businessAPI, businessResponse] = useAPI();
   const [serviceAPI, serviceResponse] = useAPI();
-  const { user: authUser } = useAuth0();
+  const { user } = useAuth0();
   const [services, setServices] = useState<any[]>([]);
   let isLoading = businessResponse.loading && serviceResponse.loading
   const navigate = useNavigate();
 
+  // Go to business view of service details page
+  const handleServiceClick = (id: number) => {
+      navigate(`/BusinessService/${id}`)
+  }
+
+  // Get the user and validate that the business is initialized
   const getUser = async () => {
     if (businessAPI.businesses) {
       const businesses = businessAPI.businesses as APIMethods
-      if (authUser?.sub) {
-        await businesses.getOne(authUser.sub);
+      if (user?.sub) {
+        await businesses.getOne(user.sub);
       }
       if (businessResponse.status === 204) {
         navigate('/BusinessInit');
@@ -29,11 +34,13 @@ export default function Dashboard() {
     }
   }
 
+  // After verifying the business is verified to host services, 
+  // get the services that the business currently is hosting. 
   const getServices = async () => {
     if (serviceAPI.businessServices) {
       const services = serviceAPI.businessServices as APIMethods
-      if (authUser?.sub) {
-        await services.getOne(authUser.sub);
+      if (user?.sub) {
+        await services.getOne(user.sub);
         if (serviceResponse.status === 200) {
           setServices(serviceResponse.data);
         }
@@ -63,7 +70,7 @@ export default function Dashboard() {
               <>
                 <h2>Services</h2>
                 {services.map((service, id) => (
-                  <ServiceCard key={id} service={service} id={id} />
+                  <ServiceCard key={id} service={service} id={id} handleClick={handleServiceClick}/>
                 ))}
               </>
               }

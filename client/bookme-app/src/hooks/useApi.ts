@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
 
@@ -37,9 +37,23 @@ export function useAPI() {
   const [data, setData] = useState<any>();
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [authorized, setAuthorized] = useState(true)
+  const [accessToken, setAccessToken] = useState('')
 
-  // import token call
-  const { getAccessTokenSilently } = useAuth0();
+  useEffect(() => {
+    checkAuthorization();
+  }, [])
+
+  const checkAuthorization = async () => {
+    try {
+      // import token call
+      const { getAccessTokenSilently } = useAuth0();
+      const accessToken = await getAccessTokenSilently();
+      setAccessToken(accessToken)
+    } catch (e) {
+      setAuthorized(false)
+    }
+  }
 
   const get = async (url: string): Promise<void> => {
     const options: ApiOptions = {
@@ -75,17 +89,26 @@ export function useAPI() {
     // response state variables
       setLoading(true);
 
-      const accessToken = await getAccessTokenSilently();
+      let requestOptions
 
-      // new request object
-      const requestOptions: RequestInit = {
-        method: options.method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: options.body ? JSON.stringify(options.body) : undefined,
-      };
+      if (authorized) {
+        requestOptions = {
+            method: options.method,
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: options.body ? JSON.stringify(options.body) : undefined,
+        };
+      } else {
+        requestOptions = {
+          method: options.method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: options.body ? JSON.stringify(options.body) : undefined,
+        };
+      }
 
       try {
         const apiResponse = await fetch(url, requestOptions);
