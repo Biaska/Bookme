@@ -1,2 +1,2 @@
-# CS361-Project
+# Bookme
 
