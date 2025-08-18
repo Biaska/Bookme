@@ -2,13 +2,18 @@ const NodeGeocoder = require('node-geocoder');
 const Connection = require('../db.js');
 const haversine = require("haversine");
 
-// Location service
-const geocoder = NodeGeocoder({ provider: 'openstreetmap' });
+const geocoder = NodeGeocoder({
+  provider: 'openstreetmap',
+  httpAdapter: 'https',
+  formatter: null,
+  timeout: 8000,
+  headers: { 'User-Agent': 'Bookme/1.0' }
+});
 
 /**
  * Get coordinates of a zipcode
- * @param {string} zipcode 
- * @returns 
+ * @param {string} zipcode
+ * @returns
  */
 const geocodeAddress = async (zipcode) => {
     try {
@@ -25,17 +30,17 @@ const geocodeAddress = async (zipcode) => {
 
 /**
  * Pass in coordinates to query database for all businesses within the radius.
- * @param {number} userLatitude 
- * @param {number} userLongitude 
- * @param {number} radius 
- * @returns 
+ * @param {number} userLatitude
+ * @param {number} userLongitude
+ * @param {number} radius
+ * @returns
  */
 const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) => {
     let businesses = []; // Placeholder for fetched businesses
     try {
         // Fetch businesses from the database
         const con = new Connection();
-        const businessesQuery = await con.query("Select * FROM Businesses"); 
+        const businessesQuery = await con.query("Select * FROM Businesses");
         businesses = businessesQuery.rows
 
         userLocation = {
@@ -58,9 +63,9 @@ const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) =>
             options = {
                 threshold: radius,
                 unit: 'mile'
-            } 
+            }
 
-            // Business is within radius 
+            // Business is within radius
             if (haversine(userLocation, businessLocation, options)) {
                 businesses[i].coordinates = {
                     latitude: coordinates.latitude,

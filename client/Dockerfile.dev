@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+# Use cached deps when package files don't change
+COPY package*.json ./
+RUN npm ci
+
+# App code mounted at runtime via compose for hot-reload
+
+EXPOSE 5173
+CMD ["npm", "run", "dev", "--", "--host"]

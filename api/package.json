@@ -4,6 +4,8 @@
   "description": "A server for data processing for the booking app, bookme.",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage"
   },
   "repository": {
@@ -25,7 +27,8 @@
     "node-fetch": "^3.3.2",
     "node-geocoder": "^4.3.0",
     "nodemon": "^3.0.3",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

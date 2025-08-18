@@ -9,6 +9,7 @@ interface AuthProps {
 export const Auth: React.FC<AuthProps> = ({
   component,
 }) => {
+
   const Component = withAuthenticationRequired(component, {
     onRedirecting: () => (
       <div className="page-layout">

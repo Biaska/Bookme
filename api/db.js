@@ -1,44 +1,46 @@
 const { Client } = require('pg')
 const fs = require('fs');
-const queries = require('./sql-queries.cjs')
+const queries = require('./sql-queries.cjs');
+const { env, pgSsl } = require("./config");
 
 class Connection {
 
-    // Connect to database and save client 
-
+    // Connect to database and save client
     constructor() {
         this.client = new Client({
-            user: process.env.POSTGRESQL_USER,
-            host: process.env.POSTGRESQL_HOST,
-            database: process.env.POSTGRESQL_DB,
-            password: process.env.POSTGRESQL_PASSWORD,
-            port: process.env.POSTGRESQL_PORT,
-            ssl: true,
+            user: env.POSTGRESQL_USER,
+            host: env.POSTGRESQL_HOST,
+            database: env.POSTGRESQL_DB,
+            password: env.POSTGRESQL_PASSWORD,
+            port: Number(env.POSTGRESQL_PORT),
+            ssl: pgSsl,
         })
     }
 
     async resetDatabase() {
 
         // USED FOR DEVELOPMENT
-        // Resets the database to it's initial state 
+        // Resets the database to it's initial state
         await this.client.connect();
 
         try {
-            let res = await this.client.query(queries.foreignChecks.off)
-            console.log(res)
-            res = await this.client.query(queries.drop)
-            console.log(res)
-            res = await this.client.query(queries.createDatabase)
-            console.log(res)
-            res = await this.client.query(queries.foreignChecks.on)
-            console.log(res)
-            console.log("DATABASE RESET")
+            let res = await this.client.query(queries.foreignChecks.off);
+            console.log(res);
+            res = await this.client.query(queries.drop);
+            console.log(res);
+            res = await this.client.query(queries.createDatabase);
+            console.log(res);
+            res = await this.client.query(queries.insertSampleData);
+            console.log(res);
+            res = await this.client.query(queries.foreignChecks.on);
+            console.log(res);
+            console.log("DATABASE RESET");
         } catch(e) {
             console.error(e);
         } finally {
             await this.client.end();
         }
-    } 
+    }
 
     async connect() {
 
@@ -50,7 +52,7 @@ class Connection {
     async openQuery(query, parameters) {
 
         // Query database
-        // Optional: pass in parameters to make a call using pq library's 
+        // Optional: pass in parameters to make a call using pq library's
         // parameterized queries
 
         if (parameters === undefined) {
@@ -85,15 +87,15 @@ class Connection {
         } finally {
             await this.client.end();
         }
-    } 
+    }
 
     async query(stringQuery, parameters) {
 
         // Query database
-        // Optional: pass in parameters to make a call using pq library's 
+        // Optional: pass in parameters to make a call using pq library's
         // parameterized queries
 
-        await this.client.connect();       
+        await this.client.connect();
 
         // response
         let res;
@@ -108,14 +110,14 @@ class Connection {
          } catch (err) {
             console.error(err);
             return err
-            
+
          } finally {
             await this.client.end();
             return res;
-         } 
+         }
     }
 
-    
+
 }
 
 module.exports = Connection

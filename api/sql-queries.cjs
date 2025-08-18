@@ -11,22 +11,23 @@ const queries = {
         DROP TABLE IF EXISTS Bookings cascade;`,
     createDatabase: `
         CREATE TABLE Businesses (
-            id VARCHAR(30) NOT NULL PRIMARY KEY,
-            last_name VARCHAR(255) NOT NULL,
-            first_name VARCHAR(255) NOT NULL,
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255),
             email VARCHAR(255) UNIQUE NOT NULL,
             phone_number VARCHAR(15),
             street_address VARCHAR(255),
             city VARCHAR(255),
             state VARCHAR(255),
             postal_code VARCHAR(10),
+            country VARCHAR(255),
+            website VARCHAR(255),
             timezone VARCHAR(50) DEFAULT 'UTC',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE Services (
             id SERIAL PRIMARY KEY,
-            businessId VARCHAR(30) NOT NULL,
+            businessId INT NOT NULL,
             name VARCHAR(255) NOT NULL,
             description TEXT,
             type VARCHAR(30) NOT NULL,
@@ -87,11 +88,11 @@ const queries = {
             ('Cosmic Creations', 'info@cosmiccreations.com', '123-456-7890', '42 Galaxy Lane', 'Stellaria', 'Nebula', 'CC123', 'Cosmos', 'www.cosmiccreations.com', 'UTC'),
             ('Astral Aromas', 'contact@astralaromas.com', '987-654-3210', '8 Celestial Road', 'Starville', 'Orion', 'AA987', 'Universe', 'www.astralaromas.com', 'GMT'),
             ('Nebula Nourish', 'hello@nebulanourish.com', '555-123-4567', '15 Galactic Street', 'Nebula City', 'Andromeda', 'NN555', 'Cosmic Cluster', 'www.nebulanourish.com', 'UTC');
-        INSERT INTO Services (businessId, name, description, price, duration)
+        INSERT INTO Services (businessId, name, description, price, type, duration)
         VALUES
-            (1, 'Celestial Spa Package', 'Indulge in a spa experience beyond the stars', 150.00, 120),
-            (1, 'Astro Facial Glow', 'Revitalize your skin with cosmic energy', 75.00, 60),
-            (2, 'Galactic Aromatherapy', 'Elevate your senses with celestial scents', 40.00, 45);
+            (1, 'Celestial Spa Package', 'Indulge in a spa experience beyond the stars', 150.00, 'Experience', 120),
+            (1, 'Astro Facial Glow', 'Revitalize your skin with cosmic energy', 75.00, 'Experience', 60),
+            (2, 'Galactic Aromatherapy', 'Elevate your senses with celestial scents', 40.00, 'Therapy',45);
         INSERT INTO Schedules (serviceId, monday, tuesday, wednesday, thursday, friday, saturday, sunday, startDate, endDate, start_time, end_time, timezone)
         VALUES
             (1, true, true, true, true, true, false, false, '2024-03-01', '2024-03-31', '10:00:00', '18:00:00', 'UTC'),
