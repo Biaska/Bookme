@@ -1,6 +1,4 @@
 const NodeGeocoder = require('node-geocoder');
-const Connection = require('../db.js');
-const haversine = require("haversine");
 
 const geocoder = NodeGeocoder({
   provider: 'openstreetmap',
@@ -28,56 +26,4 @@ const geocodeAddress = async (zipcode) => {
     }
 };
 
-/**
- * Pass in coordinates to query database for all businesses within the radius.
- * @param {number} userLatitude
- * @param {number} userLongitude
- * @param {number} radius
- * @returns
- */
-const getBusinessesWithinRadius = async (userLatitude, userLongitude, radius) => {
-    let businesses = []; // Placeholder for fetched businesses
-    try {
-        // Fetch businesses from the database
-        const con = new Connection();
-        const businessesQuery = await con.query("Select * FROM Businesses");
-        businesses = businessesQuery.rows
-
-        userLocation = {
-            latitude: userLatitude,
-            longitude: userLongitude
-        }
-
-        let nearbyBusinesses = []
-        // Then, for each business, geocode its address and calculate distance
-        for (let i = 0; i<businesses.length; i++) {
-            // get business coordinates
-            coordinates = await geocodeAddress(businesses[i].postal_code);
-            businessLocation = {
-                latitude: coordinates.latitude,
-                longitude: coordinates.longitude,
-            };
-
-            // options to return boolean for haversine formula
-            // sets the unit and the threshold distance
-            options = {
-                threshold: radius,
-                unit: 'mile'
-            }
-
-            // Business is within radius
-            if (haversine(userLocation, businessLocation, options)) {
-                businesses[i].coordinates = {
-                    latitude: coordinates.latitude,
-                    longitude: coordinates.longitude,
-                };
-                nearbyBusinesses.push(businesses[i]);
-            }
-        }
-        return nearbyBusinesses;
-    } catch (error) {
-        console.log(error)
-    }
-};
-
-module.exports = { getBusinessesWithinRadius, geocodeAddress }
+module.exports = geocodeAddress

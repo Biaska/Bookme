@@ -1,14 +1,13 @@
 const app = require('./index.js');
 const { env } = require("./config.js");
-const Connection = require('./db.js');
+const db = require('./db.js');
 
 const PORT = parseInt(env.PORT, 10);
 
 
 (async () => {
   try {
-    const conn = new Connection();
-    await conn.resetDatabase();
+    await db.resetDatabase();
   } catch (err) {
     console.error("Database init failed:", err);
   }

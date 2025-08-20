@@ -1,4 +1,7 @@
-const Connection = require('../db.js');
+const db = require('../db.js');
+
+// TODO Optizime for keyword filtering in DB call.
+// Current implementation is innefficient tdue to javascript filtering.
 
 /**
  * Filter a list of services by a keyword string.
@@ -39,9 +42,7 @@ const filterServicesByKeyword = (services, keyword) => {
  */
 const getBusinessServices = async (businessIDs, keyword) => {
     try {
-
-        const con = new Connection()
-        const { rows } = await con.query(`SELECT * FROM Services WHERE businessId = ANY($1::int[])`, [businessIDs])
+        const { rows } = await db.query(`SELECT * FROM Services WHERE businessId = ANY($1::int[])`, [businessIDs])
 
         let services = [...rows]
 

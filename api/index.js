@@ -2,11 +2,12 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const { auth } = require("express-oauth2-jwt-bearer");
-const Connection = require('./db.js');
+const db = require('./db.js');
 const queries = require('./sql-queries.cjs')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const NodeGeocoder = require('node-geocoder');
-const { getBusinessesWithinRadius, geocodeAddress }  = require('./utils/geocode.js');
+const geocodeAddress  = require('./utils/geocode.js');
+const { getBusinessesWithinRadius } = require('./controllers.js');
 const getBusinessServices = require('./utils/servicesKeywordSearch.js');
 const { env } = require("./config.js");
 
@@ -40,8 +41,6 @@ app.use(
   })
 );
 
-console.log("Starting api...")
-
 app.get('/', async (req, res) => {
   res.status(200).json("Bookme API")
 })
@@ -50,8 +49,7 @@ app.get('/', async (req, res) => {
 app.get('/businesses', validateAccessToken, async (req, res) => {
     console.log("GET Businesses")
 
-    let con = new Connection()
-    let q = await con.query('select * from Businesses')
+    let q = await db.query('select * from Businesses')
 
     res.status(200).json(q.rows);
 });
@@ -60,8 +58,7 @@ app.get('/businesses', validateAccessToken, async (req, res) => {
 app.get('/businesses/:id', validateAccessToken, async (req, res) => {
   console.log("GET ONE BUSINESS");
 
-  let con = new Connection()
-  let business = await con.query(queries.businesses.select.one, [req.params.id])
+  let business = await db.query(queries.businesses.select.one, [req.params.id])
 
   if (business.rowCount === 0) {
     res.status(204).json("No businesses found");
@@ -81,8 +78,7 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
     qParams.push(value);
   });
 
-  let con = new Connection();
-  let business = await con.query(queries.businesses.insert.one, qParams);
+  let business = await db.query(queries.businesses.insert.one, qParams);
 
   // Error querying db
   if (business instanceof Error) {
@@ -96,8 +92,7 @@ app.post('/businesses', validateAccessToken, async (req, res) => {
 app.get('/businessServices/:id', validateAccessToken, async (req, res) => {
   console.log("GET Business Services");
 
-  let con = new Connection()
-  let business = await con.query(queries.services.select.business, [req.params.id])
+  let business = await db.query(queries.services.select.business, [req.params.id])
 
   // If row not found
   if (business.rowCount === 0) {
@@ -112,8 +107,7 @@ app.get('/businessServices/:id', validateAccessToken, async (req, res) => {
 app.get('/services', validateAccessToken, async (req, res) => {
   console.log("GET")
 
-  let con = new Connection()
-  let q = await con.query('select * from Services')
+  let q = await db.query('select * from Services')
 
   res.status(200).json(q.rows);
 });
@@ -131,8 +125,7 @@ app.post('/services', validateAccessToken, async (req, res) => {
     qParams.push(value);
   });
 
-  let con = new Connection();
-  let service = await con.query(queries.services.insert.one, qParams)
+  let service = await db.query(queries.services.insert.one, qParams)
 
   } catch (error) {
     console.log(error);
@@ -145,8 +138,7 @@ app.post('/services', validateAccessToken, async (req, res) => {
 app.get('/services/:id', async (req, res) => {
   console.log("GET One Service");
 
-  let con = new Connection()
-  let service = await con.query(queries.services.select.one, [req.params.id])
+  let service = await db.query(queries.services.select.one, [req.params.id])
 
   if (service.rowCount === 0) {
     res.status(204).json("No businesses found");
@@ -189,41 +181,32 @@ app.post('/schedules', validateAccessToken, async (req, res) => {
 
 // User Search for nearby services
 app.post('/search', async (req, res) => {
-  const t0 = Date.now();
-  const lap = (label, tStart) => console.log(`${label}: ${(Date.now()-tStart)} ms`);
-
   try {
-    console.log("POST /search");
+    console.log("SEARCH")
     const { zipCode, radius, keyword } = req.body;
+    if (!zipCode) return res.status(400).json({ error: 'Zip code is required' });
 
-    const t1 = Date.now();
     const { latitude, longitude } = await geocodeAddress(zipCode);
-    lap('geocode', t1);
 
-    const t2 = Date.now();
     const businesses = await getBusinessesWithinRadius(latitude, longitude, radius);
-    lap('getBusinessesWithinRadius', t2);
 
-    const ids = businesses.map(b => b.id);
-    const t3 = Date.now();
-    const services = await getBusinessServices(ids, keyword);
-    lap('getBusinessServices', t3);
 
-    lap('total', t0);
-      res.status(200).json(services);
+    const businessIds = businesses.map(b => b.id);
+    if (businessIds.length === 0) return res.json([]);
 
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    const services = await getBusinessServices(businessIds, keyword);
+    return res.json(services);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+});
 
 // USED FOR DEVELOPMENT
 // Reset the database
 app.get('/reset', validateAccessToken, async (req, res) => {
   console.log("RESET DATABASE")
-  let con = new Connection()
-  await con.resetDatabase()
+  await db.resetDatabase()
   res.status(200).json("Database Reset")
 });
 

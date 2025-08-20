@@ -22,6 +22,8 @@ const queries = {
             country VARCHAR(255),
             website VARCHAR(255),
             timezone VARCHAR(50) DEFAULT 'UTC',
+            latitude DOUBLE PRECISION,
+            longitude DOUBLE PRECISION,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -81,13 +83,20 @@ const queries = {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (sessionId) REFERENCES Sessions(id)
-        );`,
+        );
+        CREATE EXTENSION IF NOT EXISTS cube;
+        CREATE EXTENSION IF NOT EXISTS earthdistance;
+
+        -- Index for fast radius queries
+        CREATE INDEX IF NOT EXISTS businesses_ll_earth_idx
+        ON businesses
+        USING gist (ll_to_earth(latitude, longitude));`,
     insertSampleData: `
-        INSERT INTO Businesses (name, email, phone_number, street_address, city, state, postal_code, country, website, timezone)
+        INSERT INTO Businesses (name, email, phone_number, street_address, city, state, postal_code, country, website, timezone, latitude, longitude)
         VALUES
-            ('Cosmic Creations', 'info@cosmiccreations.com', '123-456-7890', '42 Galaxy Lane', 'Stellaria', 'Nebula', 'CC123', 'Cosmos', 'www.cosmiccreations.com', 'UTC'),
-            ('Astral Aromas', 'contact@astralaromas.com', '987-654-3210', '8 Celestial Road', 'Starville', 'Orion', 'AA987', 'Universe', 'www.astralaromas.com', 'GMT'),
-            ('Nebula Nourish', 'hello@nebulanourish.com', '555-123-4567', '15 Galactic Street', 'Nebula City', 'Andromeda', 'NN555', 'Cosmic Cluster', 'www.nebulanourish.com', 'UTC');
+            ('Cosmic Creations', 'info@cosmiccreations.com', '123-456-7890', '42 Galaxy Lane', 'Chicago', 'Illinois', '60007', 'United States', 'www.cosmiccreations.com', 'UTC', '42.0114', '-88.0021'),
+            ('Astral Aromas', 'contact@astralaromas.com', '987-654-3210', '8 Celestial Road', 'Seattle', 'Washington', '98039', 'United States', 'www.astralaromas.com', 'GMT', '47.6258', '-122.2422'),
+            ('Nebula Nourish', 'hello@nebulanourish.com', '555-123-4567', '15 Galactic Street', 'Sand Francisco', 'California', '94102', 'United States', 'www.nebulanourish.com', 'UTC', '37.7787', '-122.4212');
         INSERT INTO Services (businessId, name, description, price, type, duration)
         VALUES
             (1, 'Celestial Spa Package', 'Indulge in a spa experience beyond the stars', 150.00, 'Experience', 120),
