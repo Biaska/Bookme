@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for api/utils/geocode.js</title>
+    <title>Code coverage report for api/middlewares/error.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">api/utils</a> geocode.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">api/middlewares</a> error.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">44.44% </span>
+                <span class="strong">14.28% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/9</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">44.44% </span>
+                <span class="strong">14.28% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/9</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
@@ -82,72 +82,45 @@
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L20'></a><a href='#L20'>20</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const NodeGeocoder = require('node-geocoder');
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">function <span class="fstat-no" title="function not covered" >errorHandler(</span>err, req, res, _next) {
+  // Known application error
+  const status = <span class="cstat-no" title="statement not covered" >err.statusCode &amp;&amp; Number.isInteger(err.statusCode) ? err.statusCode : 500;</span>
 &nbsp;
-const geocoder = NodeGeocoder({
-  provider: 'openstreetmap',
-  httpAdapter: 'https',
-  formatter: null,
-  timeout: 8000,
-  headers: { 'User-Agent': 'Bookme/1.0' }
-});
+  const payload = <span class="cstat-no" title="statement not covered" >{</span>
+    error: err.name || 'Error',
+    message: err.message || 'Internal Server Error',
+  };
 &nbsp;
-/**
- * Get coordinates of a zipcode
- * @param {string} zipcode
- * @returns
- */
-const geocodeAddress = <span class="fstat-no" title="function not covered" >as</span>ync (zipcode) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const coordinates = <span class="cstat-no" title="statement not covered" >await geocoder.geocode({</span>
-            country: "USA",
-            zipcode: zipcode,
-        });
-<span class="cstat-no" title="statement not covered" >        return coordinates[0];</span>
-    } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error(error);</span>
-<span class="cstat-no" title="statement not covered" >        throw new Error('Failed to geocode address');</span>
-    }
-};
+<span class="cstat-no" title="statement not covered" >  if (process.env.NODE_ENV !== 'production' &amp;&amp; err.stack) {</span>
+<span class="cstat-no" title="statement not covered" >    payload.stack = err.stack;</span>
+  }
 &nbsp;
-module.exports = geocodeAddress</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >  console.error(err);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  res.status(status).json(payload);</span>
+}
+&nbsp;
+module.exports = { errorHandler };
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

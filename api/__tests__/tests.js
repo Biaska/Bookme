@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../index.js");
-const Connection = require('../db.js')
-const queries = require('../sql-queries.cjs')
+const Connection = require('../db/db.js')
+const queries = require('../db/sql-queries.cjs')
 
 describe('Test the create business method', async () => {
     beforeAll(async() => {
@@ -19,7 +19,7 @@ describe('Test the create business method', async () => {
         }
     });
     it("Test delete a business", async () => {
-        try 
+        try
         {
             const res = await con.openQuery(queries.tests.deleteBusiness)
         } catch(e) {

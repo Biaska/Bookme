@@ -1,6 +1,6 @@
 const queries = require('./sql-queries.cjs');
 const { Pool } = require('pg');
-const { env, pgSsl } = require('./config');
+const { env, pgSsl } = require('../config');
 
 const pool = new Pool({
   user: env.POSTGRESQL_USER,

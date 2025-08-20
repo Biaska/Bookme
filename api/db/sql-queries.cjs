@@ -136,12 +136,29 @@ const queries = {
         select: {
             all: "SELECT * FROM Services",
             one: "SELECT * FROM Services WHERE id = $1",
-            business:"SELECT * FROM Services WHERE businessID = $1"
+            business:"SELECT * FROM Services WHERE businessID = $1",
+            byKeyword: `
+                SELECT *
+                FROM Services
+                WHERE businessId = ANY($1::int[])
+                  AND (
+                    $2::text IS NULL
+                    OR "name" ILIKE '%' || $2 || '%'
+                    OR "description" ILIKE '%' || $2 || '%'
+                  )
+              `
         },
         insert: {
             one: "INSERT INTO Services(businessID, name, description, type, price, duration) VALUES($1, $2, $3, $4, $5, $6)"
         }
-    }
+    },
+    search: `
+    SELECT id, name, email, phone_number, street_address, city, state, postal_code,
+           country, website, timezone, latitude, longitude
+    FROM Businesses
+    WHERE earth_box(ll_to_earth($1, $2), $3) @> ll_to_earth(latitude, longitude)
+      AND earth_distance(ll_to_earth($1, $2), ll_to_earth(latitude, longitude)) <= $3
+  `
 }
 
 module.exports = queries

@@ -1,6 +1,6 @@
 const app = require('./index.js');
 const { env } = require("./config.js");
-const db = require('./db.js');
+const db = require('./db/db.js');
 
 const PORT = parseInt(env.PORT, 10);
 
