@@ -16,7 +16,7 @@ const geocoder = NodeGeocoder({
 const geocodeAddress = async (zipcode) => {
     try {
         const coordinates = await geocoder.geocode({
-            country: "USA",
+            country: "us",
             zipcode: zipcode,
         });
         return coordinates[0];
