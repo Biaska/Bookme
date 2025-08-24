@@ -55,6 +55,7 @@ async function createSchedule(req, res) {
 // POST /search
 async function searchNearbyServices(req, res) {
   const { zipCode, radius, keyword } = req.body || {};
+  console.log('Zipcode', zipCode)
   if (!zipCode) throw new AppError(400, 'Zip code is required');
   const list = await services.searchNearbyServices(zipCode, radius, keyword);
   return res.status(200).json(list);

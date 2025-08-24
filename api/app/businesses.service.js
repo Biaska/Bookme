@@ -43,6 +43,7 @@ async function getBusinessesWithinRadius(userLat, userLon, radiusMiles) {
 
 async function searchNearbyServices(zipCode, radiusMiles, keyword) {
   const { latitude, longitude } = await geocodeAddress(zipCode);
+  console.log('latitude:', latitude, 'longitude:', longitude)
   const businesses = await getBusinessesWithinRadius(latitude, longitude, radiusMiles);
 
   const businessIds = businesses.map((b) => b.id);

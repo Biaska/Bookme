@@ -18,6 +18,7 @@ async function createBusiness(paramsArray) {
 
 async function searchBusinessesWithinRadius(userLat, userLon, radiusMeters) {
   const { rows } = await db.query(queries.search, [userLat, userLon, radiusMeters]);
+  console.log('within radius:', rows);
   return rows;
 }
 
